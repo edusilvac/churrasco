@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Churrasco: painel de organização</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap">
+<style>
+:root{--bg:#f7ede2;--card:rgba(255,255,255,.78);--ink:#2b1810;--mute:#7a5a4a;--line:rgba(60,30,15,.14);--a:#e0431a;--b:#f0a014;--warn:#c4122f;--ok:#2e8b57;--on:#2b1810;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17100c;--card:rgba(255,255,255,.06);--ink:#f6eadf;--mute:#b79f90;--line:rgba(255,255,255,.13);--a:#ff6a3a;--b:#ffb52e;--warn:#ff5d73;--ok:#52d68a;--on:#1a0e08;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#17100c;--card:rgba(255,255,255,.06);--ink:#f6eadf;--mute:#b79f90;--line:rgba(255,255,255,.13);--a:#ff6a3a;--b:#ffb52e;--warn:#ff5d73;--ok:#52d68a;--on:#1a0e08;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*:before,*:after{box-sizing:inherit}
+body{margin:0;color:var(--ink);font:16px/1.5 "Space Grotesk",system-ui,sans-serif;font-variant-numeric:tabular-nums;
+background:radial-gradient(700px 420px at 100% 0,color-mix(in srgb,var(--a) 20%,transparent),transparent),radial-gradient(500px 380px at 0 30%,color-mix(in srgb,var(--b) 16%,transparent),transparent),var(--bg);background-attachment:fixed;-webkit-tap-highlight-color:transparent}
+main{max-width:880px;margin:0 auto;padding:22px 16px 56px}
+h1{margin:0;font-size:2.4rem;line-height:1;font-weight:700;letter-spacing:-.03em}
+.sub{margin:6px 0 20px;color:var(--mute)}
+h2{display:flex;align-items:center;gap:10px;margin:30px 0 10px;font-size:1.15rem;font-weight:600}
+h2:before{content:"";width:22px;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--a),var(--b))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px 16px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.hero{display:flex;align-items:center;gap:20px;padding:18px}
+.ringwrap{position:relative;width:132px;flex:none}
+.ringwrap svg{display:block;width:100%}
+.trk{fill:none;stroke:var(--line);stroke-width:9}
+.val{fill:none;stroke:url(#g);stroke-width:9;stroke-linecap:round;transition:stroke-dashoffset .6s ease}
+.mid{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.mid b{font-size:1.7rem;font-weight:700}
+.mid small,.lbl,.tile small{color:var(--mute);font-size:.85rem}
+.big{font-size:2.3rem;font-weight:700;line-height:1.1;letter-spacing:-.02em;background:linear-gradient(90deg,var(--a),var(--b));-webkit-background-clip:text;background-clip:text;color:transparent}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.tile{padding:12px 14px}
+.tile b{display:block;font-size:1.45rem;font-weight:700}
+.flow .r{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:8px 0;border-top:1px solid var(--line)}
+.flow .r:first-child{border-top:0}
+.flow .r>span:first-child{flex:1}
+.flow .r small{color:var(--mute);display:block;font-size:.8rem}
+.flow .r b{font-size:1.05rem;white-space:nowrap}
+.flow .fin{font-size:1.25rem}
+.flow .fin b{font-size:1.5rem;color:var(--ok)}
+.flow .neg b{color:var(--warn)}
+.bar{height:12px;border-radius:7px;background:var(--line);overflow:hidden;margin:12px 0 4px}
+.bar i{display:block;height:100%;width:0;border-radius:7px;background:linear-gradient(90deg,var(--a),var(--b));transition:width .5s}
+.neg .bar i,.bar.over i{background:var(--warn)}
+ul{list-style:none;margin:0;padding:0}
+li{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--line)}
+li:first-child{border-top:0}
+li label{display:flex;align-items:center;gap:10px;flex:1;min-width:0;cursor:pointer}
+input[type=checkbox]{width:22px;height:22px;accent-color:var(--a);flex:none}
+.nm small{display:block;color:var(--mute);font-size:.82rem}
+input:checked+.nm{opacity:.5;text-decoration:line-through}
+.n{color:var(--mute);width:1.7em;flex:none}
+.star{margin-left:auto;font-size:.78rem;color:var(--a);border:1px solid var(--a);border-radius:20px;padding:0 9px;white-space:nowrap}
+.out{opacity:.5;text-decoration:line-through}
+.pr{width:96px;font:inherit;color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:10px;padding:6px 8px;text-align:right}
+.pr:focus{outline:2px solid var(--a);border-color:transparent}
+.sum{display:flex;justify-content:space-between;padding-top:10px;margin-top:2px;border-top:1px solid var(--line);color:var(--mute)}
+.sum b{color:var(--ink)}
+.pay{flex-wrap:wrap}
+.pay .who{flex:1;min-width:110px;font-weight:600}
+.chip{position:relative;cursor:pointer}
+.chip input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer}
+.chip span{display:block;padding:6px 12px;border:1px solid var(--line);border-radius:20px;font-size:.88rem;color:var(--mute)}
+.chip input:checked+span{background:linear-gradient(90deg,var(--a),var(--b));color:var(--on);border-color:transparent;font-weight:600}
+.chip input:focus-visible+span{outline:2px solid var(--a);outline-offset:2px}
+.who2{margin-left:auto;color:var(--mute);font-size:.88rem;text-align:right}
+.note{color:var(--mute);font-size:.82rem;margin-top:8px}
+button{font:inherit;margin-top:26px;background:transparent;color:var(--mute);border:1px solid var(--line);border-radius:12px;padding:8px 14px;cursor:pointer}
+html{-webkit-text-size-adjust:100%}
+.cover{position:relative;border-radius:22px;overflow:hidden;min-height:180px;display:flex;flex-direction:column;justify-content:flex-end;padding:18px;margin-bottom:16px;color:#fff;background:linear-gradient(180deg,rgba(0,0,0,.05),rgba(0,0,0,.6)),url(fotos/capa.jpg) center/cover,radial-gradient(circle at 85% 15%,#ffc23d,transparent 45%),linear-gradient(135deg,#6d1b08,#e0431a)}
+.cover .em{position:absolute;top:12px;right:16px;font-size:2.8rem;letter-spacing:.1em}
+.cover h1{color:#fff;font-size:2.8rem;text-shadow:0 2px 12px rgba(0,0,0,.4)}
+.cover .sub{color:rgba(255,255,255,.9);margin:6px 0 0}
+.ban{height:96px;border-radius:16px;margin:0 0 8px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;letter-spacing:.25em;text-indent:.25em;text-shadow:0 2px 8px rgba(0,0,0,.35);background-size:cover;background-position:center}
+.b1{background-image:linear-gradient(rgba(0,0,0,.15),rgba(0,0,0,.15)),url(fotos/bebidas.jpg),linear-gradient(120deg,#b8730a,#f5b83d)}
+.b2{background-image:linear-gradient(rgba(0,0,0,.15),rgba(0,0,0,.15)),url(fotos/carnes.jpg),linear-gradient(120deg,#6d1b08,#d9421f)}
+.b3{background-image:linear-gradient(rgba(0,0,0,.2),rgba(0,0,0,.2)),url(fotos/descartaveis.jpg),linear-gradient(120deg,#3d4a55,#8a9aa8)}
+.b4{background-image:linear-gradient(rgba(0,0,0,.15),rgba(0,0,0,.15)),url(fotos/acompanhamentos.jpg),linear-gradient(120deg,#2e6b3a,#9cc24f)}
+.b5{background-image:linear-gradient(rgba(0,0,0,.15),rgba(0,0,0,.15)),url(fotos/doces.jpg),linear-gradient(120deg,#b8325f,#f39ab0)}
+li{min-height:50px}
+input[type=checkbox]{width:26px;height:26px}
+.chip span{padding:11px 15px}
+.pr{height:46px}
+button{min-height:46px}
+@media (min-width:700px){.tiles{grid-template-columns:repeat(4,1fr)}.hero{padding:22px}.ringwrap{width:160px}}
+@media (prefers-reduced-motion:reduce){.val,.bar i{transition:none}}
+@media (max-width:420px){.hero{flex-direction:column;align-items:flex-start}.ringwrap{align-self:center}}
+</style>
+</head>
+<body>
+<main>
+<header class="cover"><span class="em" aria-hidden="true">🔥🥩🍺</span><h1>Churrasco</h1><p class="sub">Dinheiro, convidados, compras e quem leva o quê.</p></header>
+<p class="note" id="sync" style="margin:-6px 0 14px"></p>
+
+<section class="card hero">
+  <div class="ringwrap">
+    <svg viewBox="0 0 120 120" aria-hidden="true"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--a)"/><stop offset="1" style="stop-color:var(--b)"/></linearGradient></defs>
+    <circle class="trk" cx="60" cy="60" r="54"/><circle id="ring" class="val" cx="60" cy="60" r="54" stroke-dasharray="339.3" stroke-dashoffset="339.3" transform="rotate(-90 60 60)"/></svg>
+    <div class="mid"><b id="pct">0%</b><small>arrecadado</small></div>
+  </div>
+  <div><div class="lbl">Recebido até agora</div><div class="big" id="rec">R$ 0,00</div><div class="lbl">Falta receber <b id="falta"></b> de R$ 1.800,00</div></div>
+</section>
+
+<section class="tiles">
+  <div class="card tile"><small>Pagantes</small><b>9</b><small>R$ 200,00 cada, em 2 parcelas</small></div>
+  <div class="card tile"><small>Confirmados</small><b id="conf">0 de 21</b><small>convidados</small></div>
+  <div class="card tile"><small>Caixa por convidado</small><b id="cpc"></b><small>R$ 1.350,00 ÷ 21</small></div>
+  <div class="card tile"><small>Gasto por convidado</small><b id="gpc"></b><small>compras lançadas ÷ 21</small></div>
+</section>
+
+<h2>Para onde vai o dinheiro</h2>
+<section class="card flow" id="flow">
+  <div class="r"><span>Previsto<small>9 pagantes × R$ 200,00</small></span><b>R$ 1.800,00</b></div>
+  <div class="r"><span>Espaço<small>R$ 300,00 pagos, faltam R$ 150,00</small></span><b>− R$ 450,00</b></div>
+  <div class="r"><span>Caixa para compras</span><b>R$ 1.350,00</b></div>
+  <div class="r"><span>Compras lançadas<small id="np"></small></span><b id="gasto"></b></div>
+  <div class="r fin" id="saldoRow"><span>Saldo do caixa<div class="bar" id="bar"><i id="barI"></i></div><small id="barT"></small></span><b id="saldo"></b></div>
+</section>
+
+<h2>Pagamentos</h2>
+<section class="card"><ul id="pays"></ul>
+<div class="note">Cada pagante dá R$ 200,00 em 2 parcelas de R$ 100,00. Toque para marcar a parcela recebida.</div></section>
+
+<h2>Convidados</h2>
+<section class="card"><ul id="guests"></ul>
+<div class="note">Marque quem já confirmou presença.</div></section>
+
+<h2>Bebidas</h2>
+<div class="ban b1" role="img" aria-label="Bebidas">🍺🍻🥤</div>
+<section class="card"><ul id="drinks"></ul><div class="sum"><span>Subtotal</span><b id="s_d"></b></div></section>
+
+<h2>Carnes</h2>
+<div class="ban b2" role="img" aria-label="Carnes">🥩🍗🌭</div>
+<section class="card"><ul id="meats"></ul><div class="sum"><span>Subtotal</span><b id="s_m"></b></div></section>
+
+<h2>Descartáveis: a comprar</h2>
+<div class="ban b3" role="img" aria-label="Descartáveis: a comprar">🍽️🥄🧻</div>
+<section class="card"><ul id="disp"></ul><div class="sum"><span>Subtotal</span><b id="s_x"></b></div></section>
+
+<h2>Acompanhamentos: quem leva</h2>
+<div class="ban b4" role="img" aria-label="Acompanhamentos: quem leva">🍚🥗🧅</div>
+<section class="card"><ul id="sides"></ul></section>
+
+<h2>Doces: quem leva</h2>
+<div class="ban b5" role="img" aria-label="Doces: quem leva">🍰🍨🍓</div>
+<section class="card"><ul id="sweets"></ul></section>
+
+<button id="reset">Limpar todas as marcações</button>
+</main>
+<script>
+var TOTAL=1800,CAIXA=1350,NG=21;
+var G=[["Ana Flora",1],["Namorado da Ana Flora"],["Douglas",1],["Wagner",1],["Noiva do Wagner"],["Davison",1],["Davison (esposa)"],["Davison (neto)"],["Davison (neto)"],["Fabrício",1],["Mãe do Fabrício"],["Fábio",1],["Fábio (esposa)"],["Fábio (filho)"],["Eduardo",1],["Eduardo (Letícia)"],["Eduardo (Maria)"],["Kaíque",1],["Kaíque (acompanhante)"],["Ester",1],["Manu"]];
+var PG=["Ana Flora","Douglas","Wagner","Davison","Fabrício","Fábio","Eduardo","Kaíque","Ester"];
+var D=[["Cerveja","7 packs"],["Água","12 garrafas de 1,5 L"],["Coca-Cola","4 garrafas de 2,5 L"],["Guaraná Antártica","4 L"],["Mate Leão de limão","4 L"],["Mate Leão de pêssego","4 L"]];
+var M=[["Carne"],["Linguiça"],["Carne de porco"],["Pão de alho"],["Kafta"],["Frango"],["Queijo coalho"],["Fígado"]];
+var X=[["Copo grande (cerveja)","300 ml"],["Prato"],["Guardanapo"],["Talheres"]];
+var S=[["Farofa","Douglas"],["Suco de M.","Douglas"],["Arroz","Davison"],["Vinagrete","Ester"],["Salpicão","Davison"]];
+var W=[["Gelato de abacaxi","Ester"],["Pavê de chocolate","Eduardo"],["Torta de morango","Wagner"]];
+var st={};
+try{st=JSON.parse(localStorage.getItem("churrasco")||"{}")}catch(e){}
+function save(){try{localStorage.setItem("churrasco",JSON.stringify(st))}catch(e){}}
+/* Cole aqui o endereço do Firebase Realtime Database, entre as aspas. Vazio = salva só neste aparelho. */
+var DB_URL="https://churrascodamana-159fd-default-rtdb.firebaseio.com";
+var pend=0;
+function dburl(){return DB_URL.replace(/\/+$/,"")+"/churrasco.json"}
+function stat(t){var s=$("sync");if(s)s.textContent=t}
+function setv(k,v){
+  st[k]=v;save();
+  if(!DB_URL)return;
+  var o={};o[k]=v;pend++;
+  fetch(dburl(),{method:"PATCH",body:JSON.stringify(o)}).then(function(){stat("Sincronizado")},function(){stat("Sem conexão, tentando de novo")}).then(function(){pend--});
+}
+function same(a,b){var k;for(k in a)if(a[k]!==b[k])return false;for(k in b)if(!(k in a))return false;return true}
+function pull(){
+  if(!DB_URL||pend>0)return;
+  var a=document.activeElement;if(a&&a.className==="pr")return;
+  fetch(dburl()).then(function(r){return r.json()}).then(function(d){
+    d=d||{};if(!same(d,st)){st=d;save();all()}stat("Sincronizado");
+  }).catch(function(){stat("Sem conexão, tentando de novo")});
+}
+function $(i){return document.getElementById(i)}
+function money(n){return n.toLocaleString("pt-BR",{style:"currency",currency:"BRL"})}
+function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
+function toggle(k,c){c.checked=!!st[k];c.onchange=function(){setv(k,c.checked);calc()}}
+function items(id,list,pre){
+  var ul=$(id);ul.innerHTML="";
+  list.forEach(function(it,i){
+    var k=pre+i,li=el("li"),l=el("label"),c=el("input");c.type="checkbox";toggle(k,c);
+    var nm=el("span","nm",it[0]);if(it[1])nm.appendChild(el("small",0,it[1]));
+    l.appendChild(c);l.appendChild(nm);li.appendChild(l);
+    var p=el("input","pr");p.type="number";p.min="0";p.step="0.01";p.inputMode="decimal";p.placeholder="R$";
+    p.setAttribute("aria-label","Preço de "+it[0]);
+    if(st["v_"+k])p.value=st["v_"+k];
+    p.oninput=function(){setv("v_"+k,parseFloat(p.value)||0);calc()};
+    li.appendChild(p);ul.appendChild(li);
+  });
+}
+function plain(id,list){
+  var ul=$(id);ul.innerHTML="";
+  list.forEach(function(it){var li=el("li");li.appendChild(el("span",0,it[0]));li.appendChild(el("span","who2",it[1]));ul.appendChild(li)});
+}
+function guests(){
+  var ul=$("guests");ul.innerHTML="";
+  G.forEach(function(g,i){
+    var li=el("li"),l=el("label"),c=el("input");c.type="checkbox";toggle("g"+i,c);
+    l.appendChild(c);l.appendChild(el("span","n",(i+1)+"."));l.appendChild(el("span","nm",g[0]));
+    if(g[1])l.appendChild(el("span","star","paga R$ 200"));
+    li.appendChild(l);ul.appendChild(li);
+  });
+  var o=el("li","out","Elton (?): riscado da lista");ul.appendChild(o);
+}
+function pays(){
+  var ul=$("pays");ul.innerHTML="";
+  PG.forEach(function(n,i){
+    var li=el("li","pay");li.appendChild(el("span","who",n));
+    [1,2].forEach(function(p){
+      var l=el("label","chip"),c=el("input");c.type="checkbox";toggle("p"+i+"_"+p,c);
+      l.appendChild(c);l.appendChild(el("span",0,p+"ª parcela, R$ 100"));li.appendChild(l);
+    });
+    ul.appendChild(li);
+  });
+}
+function sub(pre,n){var t=0,c=0;for(var i=0;i<n;i++){var v=st["v_"+pre+i]||0;t+=v;if(v>0)c++}return[t,c]}
+function calc(){
+  var rec=0,i;
+  for(i=0;i<PG.length;i++){if(st["p"+i+"_1"])rec+=100;if(st["p"+i+"_2"])rec+=100}
+  var pct=rec/TOTAL;
+  $("ring").style.strokeDashoffset=339.3*(1-pct);
+  $("pct").textContent=Math.round(pct*100)+"%";
+  $("rec").textContent=money(rec);
+  $("falta").textContent=money(TOTAL-rec);
+  var cf=0;for(i=0;i<G.length;i++)if(st["g"+i])cf++;
+  $("conf").textContent=cf+" de "+NG;
+  var d=sub("d",D.length),m=sub("m",M.length),x=sub("x",X.length);
+  $("s_d").textContent=money(d[0]);$("s_m").textContent=money(m[0]);$("s_x").textContent=money(x[0]);
+  var g=d[0]+m[0]+x[0],np=d[1]+m[1]+x[1],tot=D.length+M.length+X.length,saldo=CAIXA-g;
+  $("gasto").textContent="− "+money(g);
+  $("np").textContent=np+" de "+tot+" itens com preço";
+  $("saldo").textContent=money(saldo);
+  $("cpc").textContent=money(CAIXA/NG);
+  $("gpc").textContent=money(g/NG);
+  $("saldoRow").className="r fin"+(saldo<0?" neg":"");
+  $("barI").style.width=Math.min(100,g/CAIXA*100)+"%";
+  $("barT").textContent=saldo<0?"Passou "+money(-saldo)+" do caixa":Math.round(g/CAIXA*100)+"% do caixa usado";
+}
+function all(){
+  pays();guests();items("drinks",D,"d");items("meats",M,"m");items("disp",X,"x");
+  plain("sides",S);plain("sweets",W);calc();
+}
+$("reset").onclick=function(){if(confirm("Apagar todas as marcações e preços?")){st={};save();if(DB_URL)fetch(dburl(),{method:"PUT",body:"null"});all()}};
+stat(DB_URL?"Conectando…":"Salvo só neste aparelho");
+all();pull();setInterval(pull,5000);
+</script>
+</body>
+</html>
